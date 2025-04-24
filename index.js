@@ -5,10 +5,12 @@ const mongoose = require("mongoose");
 const User = require("./Models/userModel");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+require("dotenv").config();
+
 const userRoutes = require('./Routes/userRoutes')
 
 const uri =
-  "mongodb+srv://panditsoumya35:VJOwzberPe2OSz4V@e-com-db.htzco1t.mongodb.net/?retryWrites=true&w=majority&appName=E-com-db";
+  `mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@e-com-db.htzco1t.mongodb.net/?retryWrites=true&w=majority&appName=E-com-db`;
 
 mongoose
   .connect(uri)
