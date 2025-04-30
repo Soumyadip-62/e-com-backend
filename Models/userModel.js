@@ -6,7 +6,7 @@ const {Schema,model} = require('mongoose')
         password:{
             type:String,
             required:true,
-            select:false
+            
         }
     })
 
