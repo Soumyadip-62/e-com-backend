@@ -5,7 +5,8 @@ const api = express.Router();
 const mongoose = require("mongoose");
 const { body, validationResult } = require("express-validator");
 
-const { register, login, forgotPassword } = require("../Controllers/authController");
+const { register, login, forgotPassword, profile } = require("../Controllers/authController");
+const authenticator = require("../Middlewares/authenticator");
 
 api.post(
   "/register",
@@ -23,5 +24,7 @@ api.post(
 
 api.post('/login',body('email').isEmail().normalizeEmail(), login),
 api.post('/forgotpassword', body('email').isEmail().normalizeEmail(), forgotPassword)
+api.get('/profile', authenticator, profile)
+
 
 module.exports = api;

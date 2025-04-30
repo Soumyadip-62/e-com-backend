@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../Models/userModel");
 const nodemailer = require("nodemailer");
 const { body, validationResult } = require("express-validator");
+const Whitelist = require("../Models/WhiteListModel");
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -24,6 +25,9 @@ const login = async (req, res) => {
       const token = jwt.sign({ id: user[0]._id }, process.env.JWT_SECRET, {
         expiresIn: "7d",
       });
+      await Whitelist.create({
+        token: token,
+      }).then((res) => console.log(res));
       res.status(200).json({
         message: "Login successful",
         token,
@@ -118,8 +122,23 @@ const forgotPassword = async (req, res) => {
   }
 };
 
+const profile = async (req, res) => {
+  const { id } = req.user;
+  try {
+    const user = await User.findById(id).select("-password -__v");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    } 
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
 module.exports = {
   register,
   login,
   forgotPassword,
+  profile
 };
